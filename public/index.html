@@ -3,25 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoDrop - Multi Stream</title>
   <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <h2>Stream File to Server</h2>
-      <p class="subtitle">Files are saved instantly to the server's upload folder.</p>
+      <h2>Stream Files to Server</h2>
+      <p class="subtitle">Select multiple files to stream them in parallel.</p>
       
       <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
-        <span id="dropZoneText">Click or Drag File Here</span>
-        <input type="file" id="fileInput">
+        <span id="dropZoneText">Click or Drag Files Here</span>
+        <input type="file" id="fileInput" multiple>
       </div>
       
-      <div class="progress-wrapper" id="progressWrapper">
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <div id="status">Streaming... 0%</div>
-      </div>
+      <div id="uploadQueue" class="upload-queue"></div>
 
-      <button class="btn" onclick="uploadFile()">Stream File</button>
+      <button class="btn" onclick="uploadFiles()">Stream Files</button>
     </div>
 
     <div class="card">

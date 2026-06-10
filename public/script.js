@@ -6,8 +6,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 fileInput.addEventListener('change', () => {
-  if (fileInput.files.length > 0) {
+  const count = fileInput.files.length;
+  if (count === 1) {
     dropZoneText.innerText = fileInput.files[0].name;
+  } else if (count > 1) {
+    dropZoneText.innerText = `${count} files selected`;
   }
 });
 
@@ -19,12 +22,10 @@ function loadSharedFiles() {
     .then(response => response.json())
     .then(files => {
       fileListEl.innerHTML = '';
-      
       if (!files || files.length === 0) {
         fileListEl.innerHTML = '<li class="no-files">No files available yet.</li>';
         return;
       }
-
       files.forEach(filename => {
         const li = document.createElement('li');
         li.className = 'file-item';
@@ -50,37 +51,64 @@ function loadSharedFiles() {
     });
 }
 
-function uploadFile() {
-  const file = fileInput.files[0];
-  if (!file) { alert("Please select a file first!"); return; }
+function uploadFiles() {
+  const files = fileInput.files;
+  if (files.length === 0) { alert("Please select one or more files first!"); return; }
 
-  const xhr = new XMLHttpRequest();
-  const wrapper = document.getElementById('progressWrapper');
-  const fill = document.getElementById('progressFill');
-  const status = document.getElementById('status');
+  const queueContainer = document.getElementById('uploadQueue');
+  queueContainer.innerHTML = '';
 
-  wrapper.style.display = 'block';
-  fill.style.backgroundColor = '#00cc66';
+  Array.from(files).forEach(file => {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'queue-item';
 
-  xhr.upload.addEventListener('progress', (e) => {
-    if (e.lengthComputable) {
-      const percent = Math.round((e.loaded / e.total) * 100);
-      fill.style.width = percent + '%';
-      status.innerText = 'Streaming... ' + percent + '%';
-    }
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'queue-meta';
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'queue-name';
+    nameSpan.innerText = file.name;
+
+    const statusSpan = document.createElement('span');
+    statusSpan.className = 'queue-status';
+    statusSpan.innerText = '0%';
+
+    const barDiv = document.createElement('div');
+    barDiv.className = 'queue-bar';
+
+    const fillDiv = document.createElement('div');
+    fillDiv.className = 'queue-fill';
+
+    metaDiv.appendChild(nameSpan);
+    metaDiv.appendChild(statusSpan);
+    barDiv.appendChild(fillDiv);
+    itemDiv.appendChild(metaDiv);
+    itemDiv.appendChild(barDiv);
+    queueContainer.appendChild(itemDiv);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        fillDiv.style.width = percent + '%';
+        statusSpan.innerText = percent + '%';
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        statusSpan.innerText = '✅ Done';
+        statusSpan.style.color = '#00cc66';
+      } else {
+        statusSpan.innerText = '❌ Failed';
+        statusSpan.style.color = '#ff3333';
+        fillDiv.style.backgroundColor = '#ff3333';
+      }
+    });
+
+    xhr.open('POST', '/upload', true);
+    xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
+    xhr.send(file);
   });
-
-  xhr.addEventListener('load', () => {
-    if (xhr.status === 200) {
-      status.innerText = '✅ Success! Stored in /uploads.';
-      fill.style.width = '100%';
-    } else {
-      status.innerText = '❌ Error: ' + xhr.responseText;
-      fill.style.backgroundColor = '#ff3333';
-    }
-  });
-
-  xhr.open('POST', '/upload', true);
-  xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
-  xhr.send(file);
 }
