@@ -1,0 +1,71 @@
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    background: #f4f5f7; 
+    margin: 0; 
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+}
+.container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+    width: 100%;
+}
+.card { 
+    background: white; 
+    padding: 2.5rem; 
+    border-radius: 12px; 
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08); 
+    flex: 1;
+    min-width: 320px;
+    max-width: 420px;
+    box-sizing: border-box;
+}
+h2 { color: #333; margin-top: 0; margin-bottom: 0.5rem; }
+.subtitle { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
+.drop-zone { 
+    border: 2px dashed #0066cc; 
+    border-radius: 8px; 
+    padding: 2rem; 
+    background: #f8faff; 
+    cursor: pointer; 
+    transition: background 0.2s; 
+    margin-bottom: 1rem;
+}
+.drop-zone:hover { background: #edf4ff; }
+#fileInput { display: none; }
+.btn { 
+    background: #0066cc; color: white; border: none; padding: 0.8rem 1.5rem; 
+    border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.2s; 
+}
+.btn:hover { background: #0052a3; }
+.btn-secondary {
+    background: #e4e6eb; color: #333; border: none; padding: 0.5rem 1rem;
+    border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+}
+.btn-secondary:hover { background: #d8dadf; }
+.progress-wrapper { margin-bottom: 1rem; display: none; }
+.progress-bar { background: #e0e0e0; border-radius: 4px; height: 10px; width: 100%; overflow: hidden; }
+.progress-fill { background: #00cc66; height: 100%; width: 0%; transition: width 0.1s; }
+#status { margin-top: 0.5rem; font-size: 0.9rem; color: #666; text-align: center;}
+
+
+.refresh-box { text-align: right; margin-bottom: 1rem; }
+.file-list { list-style: none; padding: 0; margin: 0; text-align: left; max-height: 250px; overflow-y: auto; }
+.file-item { 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.95rem;
+}
+.file-item:last-child { border-bottom: none; }
+.file-name { color: #333; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 200px; }
+.download-btn { 
+    color: #0066cc; text-decoration: none; font-weight: bold; font-size: 0.85rem;
+    padding: 0.3rem 0.6rem; border-radius: 4px; background: #edf4ff;
+}
+.download-btn:hover { background: #d0e3ff; }
+.no-files { color: #999; font-style: italic; text-align: center; padding: 2rem 0; }
